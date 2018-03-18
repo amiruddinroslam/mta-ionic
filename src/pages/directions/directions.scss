@@ -1,0 +1,32 @@
+page-directions {
+	#map {
+		height: 100%;
+	}
+	.bottom-map {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+	}
+
+	.time-distance {
+			color: black;
+			font-weight: bold;
+			text-align: center;
+			background: linear-gradient(transparent, map-get($colors, mapTile))
+	}
+
+	.request-btn{
+	  margin: 0px;
+	  padding: 0px; 
+	}
+
+	.cancel-btn{
+	  margin: 0px;
+	  padding: 0px;
+	}
+
+	.card {
+		height: 45px;
+	}
+
+}

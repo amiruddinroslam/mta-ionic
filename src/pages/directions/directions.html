@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar color="primary">
+  	<ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+  	<ion-title>
+  		Mobile Tow Assist
+  	</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+	<div #map id="map"></div>
+	<div class="bottom-map time-distance">
+		<ion-row>
+			<ion-col>
+				<ion-card class="card">
+				  <ion-card-content>
+				    	DISTANCE: {{totalDistance}}, DURATION: {{totalDuration}}
+				  </ion-card-content>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+	</div>
+</ion-content>
+
+<ion-footer>
+	<ion-grid>
+		<ion-row>
+			<ion-col>
+				<button class="cancel-btn" ion-button full color="danger" (click)="onCancelTowTruck()">Cancel</button>
+			</ion-col>
+			<ion-col>
+				<button class="request-btn" ion-button full (click)="onFindTowTruck()">Next</button>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-footer>
