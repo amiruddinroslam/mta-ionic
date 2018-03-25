@@ -22,6 +22,8 @@ export class NearbyWorkshopPage implements OnInit{
   pos: any;
   geoPosLat: any;
   geoPosLng: any;
+  workshopLat: any;
+  workshopLng: any;
 
   constructor(private ngZone: NgZone, private loadingCtrl: LoadingController, private alertCtrl: AlertController, 
     private geolocation: Geolocation, private navCtrl: NavController, private navParams: NavParams) {
@@ -85,7 +87,8 @@ export class NearbyWorkshopPage implements OnInit{
   	this.autocompleteItems = [];
   	this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
   		if(status === 'OK' && results[0]){
-  			this.autocompleteItems = [];
+        this.autocompleteItems = [];
+        //console.log(results[0].geometry.location.lat(), results[0].geometry.location.lng())
   			this.GooglePlaces.nearbySearch({
   				location: results[0].geometry.location,
   				radius: '5000',
@@ -104,7 +107,8 @@ export class NearbyWorkshopPage implements OnInit{
   	})
   }
 
-  initGeolocation(geoPoslat, geoPosLng){
+  initGeolocation(geoPosLat, geoPosLng){
+    console.log(geoPosLat, geoPosLng)
     //loading
     let loading = this.loadingCtrl.create({
       content: 'Please wait...'
@@ -119,7 +123,7 @@ export class NearbyWorkshopPage implements OnInit{
       };*/
 
       this.GooglePlaces.nearbySearch({
-      location: {lat: geoPoslat, lng: geoPosLng},
+      location: {lat: geoPosLat, lng: geoPosLng},
       radius: '5000',
           types: ['car_repair'], //check other types here https://developers.google.com/places/web-service/supported_types
           key: 'AIzaSyDf7_QOSGFscNNjgt6ArugYZ2tt891KtO0'
@@ -139,7 +143,10 @@ export class NearbyWorkshopPage implements OnInit{
     });*/
   }
 
-  onSelectWorkshop(workshopLocation: any) {
-    this.navCtrl.setRoot(DirectionsPage, workshopLocation);
+  onSelectWorkshop(workshopLocation) {
+    this.workshopLat = workshopLocation.lat();
+    this.workshopLng = workshopLocation.lng();
+    console.log(this.geoPosLat, this.geoPosLng);
+    this.navCtrl.setRoot(DirectionsPage,{geoPosLat: this.geoPosLat, geoPosLng: this.geoPosLng, workshopLat: this.workshopLat, workshopLng: this.workshopLng});
   }
 }

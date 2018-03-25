@@ -29,7 +29,6 @@ export class HomePage implements OnInit{
 	};
 	pos = {};
 
-
 	isHelpRequested = false;
 
 	constructor(private ngZone: NgZone, private geolocation: Geolocation, private navCtrl: NavController, private loadingCtrl: LoadingController, private toastCtrl: ToastController) {
@@ -161,21 +160,25 @@ export class HomePage implements OnInit{
 	}
 
 	selectSearchResult(item){
+		console.log(item);
 		this.clearMarkers();
 		this.autocompleteItems = [];
 
 		this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
+			console.log(results);
+			console.log(results[0]);
 			if(status === 'OK' && results[0]){
-		        // let position = {
-		        //     lat: results[0].geometry.location.lat,
-		        //     lng: results[0].geometry.location.lng
-		        // };
+		        this.pos = {
+		            lat: results[0].geometry.location.lat(),
+		            lng: results[0].geometry.location.lng()
+				};
+				console.log(this.pos);
 		        let marker = new google.maps.Marker({
 		        	position: results[0].geometry.location,
 		        	map: this.map
 		        });
 		        this.markers.push(marker);
-		        this.map.setCenter(results[0].geometry.location);
+				this.map.setCenter(results[0].geometry.location);
 	    	}
 		})
 	}

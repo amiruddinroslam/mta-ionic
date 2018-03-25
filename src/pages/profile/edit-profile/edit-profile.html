@@ -1,0 +1,62 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-buttons left>
+          <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+          </button>
+        </ion-buttons>
+        <ion-title>
+          Mobile Tow Assist
+        </ion-title>
+      </ion-navbar>
+    
+    </ion-header>
+    
+    
+    <ion-content padding>
+        <ion-toolbar class="user-profile">
+    
+        </ion-toolbar>
+            <ion-list>
+                <ion-item>
+                    <ion-label floating>Full Name</ion-label>
+                    <ion-input [(ngModel)]="user.fullName"></ion-input>
+                </ion-item>
+            </ion-list>
+            <ion-list>
+                <ion-item>
+                    <ion-label floating>Phone Number</ion-label>
+                    <ion-input type="number" [(ngModel)]="user.phoneNo"></ion-input>
+                </ion-item>
+            </ion-list>
+            <ion-list>
+                <ion-item>
+                    <ion-label floating>Registration Number</ion-label>
+                    <ion-input [(ngModel)]="user.vehicleRegNo"></ion-input>
+                </ion-item>
+            </ion-list>
+            <ion-list>
+                <ion-item>
+                    <ion-label floating>Car Maker</ion-label>
+                    <ion-input [(ngModel)]="user.vehicleMaker"></ion-input>
+                </ion-item>
+            </ion-list>
+            <ion-list>
+                <ion-item>
+                    <ion-label floating>Car Model</ion-label>
+                    <ion-input [(ngModel)]="user.vehicleModel"></ion-input>
+                </ion-item>
+            </ion-list>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col>
+                            <button ion-button block color="danger" (click)="cancel()">Cancel</button>
+                        </ion-col>
+                        <ion-col>
+                            <button ion-button block color="primary" (click)="editProfile()">Edit Profile</button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+
+        
+    </ion-content>

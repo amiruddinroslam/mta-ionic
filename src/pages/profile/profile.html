@@ -14,52 +14,32 @@
 </ion-header>
 
 
-<ion-content class="card-background-page">
-	<ion-card>
-		<!-- Image Designed by Evening_tao / Freepik-->
-		<img src="assets/imgs/alone-road.jpg">
-		<div class="card-title">Update Your Profile!</div>
-    	<div class="card-subtitle">We will use it to improve your experience</div>
-	</ion-card>
-	
-		<form #f="ngForm" (ngSubmit)="onSubmit(f)">
-			<ion-card-header>Personal Information</ion-card-header>
-				<ion-item>
-					<ion-label stacked>Full Name</ion-label>
-					<ion-input type="text" ngModel name="fullName"></ion-input>
-				</ion-item>
-				<ion-item>
-					<ion-label stacked>Phone Number</ion-label>
-					<ion-input type="number" ngModel name="phoneNumber"></ion-input>
-				</ion-item>
-				<ion-item>
-					<ion-label stacked>Email</ion-label>
-					<ion-input type="email" ngModel name="email" value="{{ email }}"></ion-input>
-				</ion-item>
+<ion-content padding>
+	<ion-toolbar class="user-profile">
 
-		 	<ion-card-header>Vehicle Information</ion-card-header>
-			<ion-list>	
-				<ion-item>
-					<ion-label stacked>Registration Number</ion-label>
-					<ion-input type="text" ngModel name="vehicleRegNumber"></ion-input>
-				</ion-item>
-				<ion-item>
-					<ion-label stacked>Car Maker</ion-label>
-					<ion-input type="text" ngModel name="vehicleMaker" placeholder="e.g. Proton, Honda"></ion-input>
-				</ion-item>
-				<ion-item>
-					<ion-label stacked>Model</ion-label>
-					<ion-input type="text" ngModel name="vehicleModel"></ion-input>
-				</ion-item>	
-			</ion-list>
+	</ion-toolbar>
+	<ion-list>
+		<ion-item>
+			<ion-icon name="person" item-start></ion-icon>
+				{{ (user | async)?.fullName }}
+		</ion-item>
+		<ion-item>
+				<ion-icon name="phone-portrait" item-start></ion-icon>
+				{{ (user | async)?.phoneNo }}
+		</ion-item>
+		<ion-item>
+			<ion-icon name="car" item-start></ion-icon>
+				{{ (user | async)?.vehicleRegNo }}
+		</ion-item>
+		<ion-item>
+				<ion-icon name="car" item-start></ion-icon>
+					{{ (user | async)?.vehicleMaker }}
+			</ion-item>
+			<ion-item>
+					<ion-icon name="car" item-start></ion-icon>
+						{{ (user | async)?.vehicleModel }}
+				</ion-item>		
+	</ion-list>
 
-			<ion-grid>
-				<ion-row>
-					<ion-col>
-						<button ion-button block type="submit"></button>
-					</ion-col>
-				</ion-row>
-			</ion-grid>
-		</form>
-	
+	<button ion-button block color="primary" (click)="onEditProfile()">Edit Profile</button>
 </ion-content>

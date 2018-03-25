@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 
-import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
+import { AuthService } from '../../services/auth';
+import { LoginPage } from '../login/login';
+
 @IonicPage()
 @Component({
   selector: 'page-register',
@@ -11,26 +12,27 @@ import * as firebase from 'firebase/app';
 })
 export class RegisterPage {
 
-	constructor(private afAuth: AngularFireAuth, private navCtrl: NavController) {
+	constructor(private navCtrl: NavController, private authService: AuthService, private toastCtrl: ToastController) {
 
 	}
 
 	onRegister(form: NgForm) {
 
-		this.afAuth.auth.createUserWithEmailAndPassword(form.value.email, form.value.password)
+		const toast = this.toastCtrl.create({
+			message: 'User created. Please login to continue.',
+			duration: 1500
+		});
+		this.authService.register(form.value.email, form.value.password)
 		.then(user => {
 			if(user) {
-				console.log(user);
+				toast.present();
+				this.navCtrl.setRoot(LoginPage);
 			}
+
 		})
 		.catch(error => {
 			console.log(error);
 		});
-		/*this.authService.register(form.value.email, form.value.password)
-		.then(
-			data => console.log(data)
-		)
-		.catch(error => console.log(error));*/
 	}
 	goToLogin() {
 		this.navCtrl.pop();

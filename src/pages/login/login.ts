@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, LoadingController, ToastController } from 'ionic-angular';
 import { NgForm } from '@angular/forms';
 
 import { TabsPage } from '../tabs/tabs';
 import { RegisterPage } from '../register/register';
-
-import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
+import { AuthService } from '../../services/auth';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 @Component({
   selector: 'page-login',
@@ -14,24 +13,34 @@ import * as firebase from 'firebase/app';
 })
 export class LoginPage {
 
-	constructor(private navCtrl: NavController, private afAuth: AngularFireAuth) {
+	constructor(private navCtrl: NavController, private authService: AuthService, 
+		private loadingCtrl: LoadingController, private toastCtrl: ToastController,
+		private db: AngularFireDatabase) {
 
 	}
 
 	onLogin(form: NgForm) {
-		this.afAuth.auth.signInWithEmailAndPassword(form.value.email, form.value.password)
+
+		const loading = this.loadingCtrl.create({
+			content: 'Please wait'
+		});
+		loading.present();
+
+		const toast = this.toastCtrl.create({
+			message: 'Wrong email or password. Please try again.',
+			duration: 2000
+		});
+		
+		this.authService.login(form.value.email, form.value.password)
+		.then(data => {
+			loading.dismiss();
+			this.navCtrl.setRoot(TabsPage);
+		})
 		.catch(error => {
+			loading.dismiss();
+			toast.present();
 			console.log(error);
 		});
-
-		this.afAuth.auth.onAuthStateChanged(user => {
-			if(user) {
-				
-				console.log(user.getIdToken());
-				this.navCtrl.setRoot(TabsPage);
-			}
-		})
-		
 	}
 
 	onRegister() {

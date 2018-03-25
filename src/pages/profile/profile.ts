@@ -1,31 +1,67 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 import { NgForm } from '@angular/forms';
 
+import { User } from '../../models/user';
+import { TabsPage } from '../tabs/tabs';
+import { ProfileService } from '../../services/profile';
+import { EditProfilePage } from './edit-profile/edit-profile';
+import { AngularFireObject, AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
 
 @IonicPage()
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
 })
-export class ProfilePage implements OnInit {
 
-	private user;
+export class ProfilePage {
 
-	constructor(private afAuth: AngularFireAuth) {
+	// user = {} as User;
+	// users: Observable<any>;
 
-	}
+	// constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, 
+	// 	private navCtrl: NavController, private alertCtrl: AlertController) {
+	// 		this.afAuth.authState.subscribe(auth => {
+	// 			console.log('masuk');
+	// 			this.users = db.object(`users/${auth.uid}`).valueChanges().map(user => {console.log(user)});
+	// 		});
+	// 		console.log('tak masuk');
+	// }
 
-	ngOnInit() {
+	// onSubmit() {
+
+	// 	const alert = this.alertCtrl.create({
+	// 		message: 'Your profile updated!',
+	// 		buttons: ['Ok']
+	// 	});
+
+	// 	this.afAuth.authState.subscribe(auth => {
+	// 		this.db.object(`users/${auth.uid}`).set(this.user)
+	// 		.then(() => {
+	// 			alert.present();
+	// 			console.log(auth.uid);
+	// 			console.log(auth.getIdToken());
+	// 			this.navCtrl.push(TabsPage);
+	// 		});
+	// 	})
 
 		
+	// }
+
+	userRef: AngularFireObject<any>;
+	user: Observable<any>;
+
+	constructor(private modalCtrl: ModalController, private afAuth: AngularFireAuth, private db: AngularFireDatabase) {
+		this.afAuth.authState.take(1).subscribe(auth => {
+			this.userRef = this.db.object(`user/${auth.uid}`);
+			this.user = this.userRef.valueChanges();
+		})
 	}
 
-	onSubmit(form: NgForm) {
-
+	onEditProfile() {
+		let modal = this.modalCtrl.create(EditProfilePage);
+		modal.present();
 	}
-}
+ }
