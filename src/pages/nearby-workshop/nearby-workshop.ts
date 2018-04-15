@@ -42,7 +42,7 @@ export class NearbyWorkshopPage implements OnInit{
   ngOnInit() {
     this.geoPosLat = this.navParams.get('lat');
     this.geoPosLng = this.navParams.get('lng');
-    console.log(this.geoPosLat+' and '+this.geoPosLng);
+    //console.log(this.geoPosLat+' and '+this.geoPosLng);
     if(this.geoPosLat && this.geoPosLng) {
        this.initGeolocation(this.geoPosLat, this.geoPosLng);
     }
@@ -108,7 +108,7 @@ export class NearbyWorkshopPage implements OnInit{
   }
 
   initGeolocation(geoPosLat, geoPosLng){
-    console.log(geoPosLat, geoPosLng)
+    //console.log(geoPosLat, geoPosLng)
     //loading
     let loading = this.loadingCtrl.create({
       content: 'Please wait...'
@@ -146,7 +146,7 @@ export class NearbyWorkshopPage implements OnInit{
   onSelectWorkshop(workshopLocation) {
     this.workshopLat = workshopLocation.lat();
     this.workshopLng = workshopLocation.lng();
-    console.log(this.geoPosLat, this.geoPosLng);
+    console.log('geoPosLat: '+this.geoPosLat, 'geoposLng: '+this.geoPosLng, 'workshopLat: '+this.workshopLat, 'workshopLng: '+this.workshopLng);
     this.navCtrl.setRoot(DirectionsPage,{geoPosLat: this.geoPosLat, geoPosLng: this.geoPosLng, workshopLat: this.workshopLat, workshopLng: this.workshopLng});
   }
 }

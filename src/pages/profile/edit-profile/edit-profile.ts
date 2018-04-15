@@ -25,7 +25,10 @@ export class EditProfilePage {
         this.afAuth.authState.take(1).subscribe(auth => {
             this.db.object(`user/${auth.uid}`).set(this.user)
             .then(() => console.log('add success'));
-        })
+            this.db.object(`user/${auth.uid}`).update({role: 1})
+            .then(() => console.log('add role success'));
+        });
+        this.navCtrl.pop();
     }
 
     cancel() {

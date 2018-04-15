@@ -1,11 +1,13 @@
 import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 
 import { TabsPage } from '../tabs/tabs';
+import { Observable } from 'rxjs/Observable';
+import { FetchTowPage } from '../fetch-tow/fetch-tow';
 
 declare var google: any;
 
@@ -27,18 +29,23 @@ export class DirectionsPage {
 	totalDuration = 0;
 	pos = {lat: null, lng: null};
 	ref = firebase.database().ref('geolocations/');
+	currentDate: Date;
+	key: any;
+
+	towReq: Observable<any>;
+	towReqRef: AngularFireList<any>;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, 
-		private afAuth: AngularFireAuth, private db: AngularFireDatabase) {
+		private afAuth: AngularFireAuth, private db: AngularFireDatabase, private loadingCtrl: LoadingController) {
 			this.geoPosLat = this.navParams.get('geoPosLat');
 			this.geoPosLng = this.navParams.get('geoPosLng');
 			this.workshopLat = this.navParams.get('workshopLat');
 			this.workshopLng = this.navParams.get('workshopLng');
-			console.log(this.geoPosLat, this.geoPosLng);
+			console.log('geoPosLat: '+this.geoPosLat, 'geoposLng: '+this.geoPosLng, 'workshopLat: '+this.workshopLat, 'workshopLng: '+this.workshopLng);
 			setTimeout(() => {
 				this.initMap();
 			}, 1000);
-		
+
 	}
 
 	initMap() {
@@ -81,7 +88,7 @@ export class DirectionsPage {
 					this.totalDistance += leg[i].distance.text;
 					this.totalDuration += leg[i].duration.text;
 				}
-				console.log(this.totalDuration);
+				//console.log(this.totalDuration);
 				/*let markerStart = new google.maps.Marker({
 					map: this.map,
 					position: leg.start_position,
@@ -107,22 +114,27 @@ export class DirectionsPage {
 				{
 					type: 'radio',
 					label: 'Battery',
-					value: 'battery'
+					value: 'Battery'
 				},
 				{
 					type: 'radio',
 					label: 'Engine',
-					value: 'engine'
+					value: 'Engine'
 				},
 				{
 					type: 'radio',
 					label: 'Flat Tyre',
-					value: 'tyre'
+					value: 'Flat Tyre'
 				},
 				{
 					type: 'radio',
 					label: 'Out of Fuel',
-					value: 'fuel'
+					value: 'Out of Fuel'
+				},
+				{
+					type: 'radio',
+					label: 'Others',
+					value: 'Others'
 				},
 			],
 			buttons: [
@@ -133,15 +145,36 @@ export class DirectionsPage {
 				{
 					text: 'Ok',
 					handler: (data: string) => {
+						this.currentDate = new Date();
+						var timeDate = this.currentDate.getHours() + ":"  
+				                + this.currentDate.getMinutes() + " "
+								+ this.currentDate.getDate() + "/"
+				                + (this.currentDate.getMonth()+1)  + "/" 
+								+ this.currentDate.getFullYear()
+						
+						const loading = this.loadingCtrl.create({
+							content: 'Please Wait...'
+						});
+						loading.present();
+						
 						this.afAuth.authState.subscribe(auth => {
-							this.db.list(`towRequest/${auth.uid}`).push({
-								latitude: this.pos.lat,
-								longitude: this.pos.lng,
+							console.log('geoPosLat: '+this.geoPosLat, 'geoposLng: '+this.geoPosLng, 'workshopLat: '+this.workshopLat, 'workshopLng: '+this.workshopLng);
+							this.db.list('/towRequest').push({
+								userId: auth.uid,
+								originLat: this.geoPosLat,
+								originLng: this.geoPosLng,
+								destLat: this.workshopLat,
+								destLng: this.workshopLng,
 								problem: data,
-								user: auth.uid,
+								timeDate: timeDate,
 								pickup_flag: 0
 							})
-						})
+							.then(item => {
+								loading.dismiss();
+								this.key = item.key;
+								this.navCtrl.push(FetchTowPage, {'key': this.key});
+							})
+						});
 					}
 				}
 			]

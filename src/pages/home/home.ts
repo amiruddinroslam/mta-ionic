@@ -31,7 +31,8 @@ export class HomePage implements OnInit{
 
 	isHelpRequested = false;
 
-	constructor(private ngZone: NgZone, private geolocation: Geolocation, private navCtrl: NavController, private loadingCtrl: LoadingController, private toastCtrl: ToastController) {
+	constructor(private ngZone: NgZone, private geolocation: Geolocation, private navCtrl: NavController, 
+		private loadingCtrl: LoadingController, private toastCtrl: ToastController,) {
 		//google autocomplete
 		this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
 		this.autocomplete = { input: '' };
@@ -42,13 +43,19 @@ export class HomePage implements OnInit{
 	}
 
 	ngOnInit() {
+	
 		this.initMap();
 	}
 
 	initMap() {
+		const loading = this.loadingCtrl.create({
+			content: 'Please wait...'
+		});
+
+		loading.present();
 
 		navigator.geolocation.getCurrentPosition((location) => {
-
+			loading.dismiss();
 			this.pos = {lat: location.coords.latitude, lng: location.coords.longitude};
 
 			this.map = new google.maps.Map(this.mapElement.nativeElement, {
@@ -192,6 +199,7 @@ export class HomePage implements OnInit{
 	}
 
 	onRequest() {
+		console.log(this.pos);
 		this.isHelpRequested = true;
 		this.navCtrl.setRoot(NearbyWorkshopPage, this.pos);
 	}

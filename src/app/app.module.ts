@@ -13,6 +13,7 @@ import { DirectionsPage } from '../pages/directions/directions';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { EditProfilePage } from './../pages/profile/edit-profile/edit-profile';
+import { FetchTowPage } from './../pages/fetch-tow/fetch-tow';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -42,7 +43,8 @@ import { credentials } from './config';
     DirectionsPage,
     LoginPage,
     RegisterPage,
-    EditProfilePage
+    EditProfilePage,
+    FetchTowPage
   ],
   imports: [
     BrowserModule,
@@ -64,7 +66,8 @@ import { credentials } from './config';
     DirectionsPage,
     LoginPage,
     RegisterPage,
-    EditProfilePage
+    EditProfilePage,
+    FetchTowPage
   ],
   providers: [
     StatusBar,

@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AuthService {
 
+	uid: string;
+
 	constructor(private afAuth: AngularFireAuth) {
 
 	}
@@ -15,5 +17,13 @@ export class AuthService {
 
 	register(email: string, password: string) {
 		return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+	}
+
+	authState() {
+		this.afAuth.authState.subscribe(auth => {
+			this.uid = auth.uid;
+		});
+
+		return this.uid;
 	}
 }
