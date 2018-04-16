@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { NavController, LoadingController, ToastController } from 'ionic-angular';
+import { NavController, LoadingController, ToastController, AlertController, Platform } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 import { NearbyWorkshopPage } from '../nearby-workshop/nearby-workshop';
 
@@ -32,7 +33,9 @@ export class HomePage implements OnInit{
 	isHelpRequested = false;
 
 	constructor(private ngZone: NgZone, private geolocation: Geolocation, private navCtrl: NavController, 
-		private loadingCtrl: LoadingController, private toastCtrl: ToastController,) {
+		private loadingCtrl: LoadingController, private toastCtrl: ToastController, 
+		private diagnostic: Diagnostic, private alertCtrl: AlertController, 
+		private platform: Platform) {
 		//google autocomplete
 		this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
 		this.autocomplete = { input: '' };
@@ -43,8 +46,19 @@ export class HomePage implements OnInit{
 	}
 
 	ngOnInit() {
-	
-		this.initMap();
+
+		const alert = this.alertCtrl.create({
+			message: 'Please Enable Your Location and open this apps again.',
+			buttons: ['OK']
+		});
+
+		this.diagnostic.isLocationEnabled()
+		.then(res => {this.initMap()})
+		.catch(err => {
+			alert.present();
+			this.platform.exitApp();
+		});
+		
 	}
 
 	initMap() {

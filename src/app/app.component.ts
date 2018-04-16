@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, NavController, MenuController, ToastController } from 'ionic-angular';
+import { Platform, MenuController, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -12,8 +12,8 @@ import { LoginPage } from '../pages/login/login';
 //firebase
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
-import { tap } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+// import { tap } from 'rxjs/operators';
+// import { Subject } from 'rxjs/Subject';
 
 //import { FcmProvider } from './../providers/fcm/fcm';
 
