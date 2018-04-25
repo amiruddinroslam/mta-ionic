@@ -24,6 +24,7 @@ import { ProfileService } from '../services/profile';
 import { Geolocation } from '@ionic-native/geolocation'; 
 import { Firebase } from '@ionic-native/firebase';
 import { Diagnostic } from '@ionic-native/diagnostic';
+import { Device } from '@ionic-native/device';
 
 //firebase
 import { AngularFireModule } from 'angularfire2';
@@ -79,7 +80,8 @@ import { credentials } from './config';
     //FcmProvider,
     ProfileService,
     Firebase,
-    Diagnostic
+    Diagnostic,
+    Device
   ]
 })
 export class AppModule {}

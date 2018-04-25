@@ -167,12 +167,13 @@ export class DirectionsPage {
 								destLng: this.workshopLng,
 								problem: data,
 								timeDate: timeDate,
-								pickup_flag: 0
+								pickup_flag: 0,
+								status: 'requested'
 							})
 							.then(item => {
 								loading.dismiss();
 								this.key = item.key;
-								this.navCtrl.push(FetchTowPage, {'key': this.key});
+								this.navCtrl.push(FetchTowPage, {'key': this.key, 'userId': auth.uid, 'originLat': this.geoPosLat, 'originLng': this.geoPosLng});
 							})
 						});
 					}

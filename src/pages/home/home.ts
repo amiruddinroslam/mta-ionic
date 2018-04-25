@@ -26,7 +26,7 @@ export class HomePage implements OnInit{
 	mapOpt = {
 			enableHighAccuracy: true,
 			timeout: 5000,
-			maximumAge: 0
+			maximumAge: 3000
 	};
 	pos = {};
 
@@ -47,17 +47,18 @@ export class HomePage implements OnInit{
 
 	ngOnInit() {
 
-		const alert = this.alertCtrl.create({
-			message: 'Please Enable Your Location and open this apps again.',
-			buttons: ['OK']
-		});
+		// const alert = this.alertCtrl.create({
+		// 	message: 'Please Enable Your Location and open this apps again.',
+		// 	buttons: ['OK']
+		// });
 
-		this.diagnostic.isLocationEnabled()
-		.then(res => {this.initMap()})
-		.catch(err => {
-			alert.present();
-			this.platform.exitApp();
-		});
+		// this.diagnostic.isLocationEnabled()
+		// .then(res => {this.initMap()})
+		// .catch(err => {
+		// 	alert.present();
+		// 	this.platform.exitApp();
+		// });
+		this.initMap();
 		
 	}
 
@@ -114,7 +115,15 @@ export class HomePage implements OnInit{
 			}, (error) => {
 				console.log(error);
 			}, this.mapOpt);
-		});
+		}, error => {
+			loading.dismiss();
+			this.initMapError(error);
+		}, this.mapOpt);
+	}
+
+	initMapError(error) {
+		console.log(error);
+		this.initMap();
 	}
 
 	createMarker(place) {
@@ -141,9 +150,7 @@ export class HomePage implements OnInit{
 		const loading = this.loadingCtrl.create({
 			content: 'Please wait...'
 		});
-
 		loading.present();
-
 		this.clearMarkers();
 		this.geolocation.getCurrentPosition().then((resp) => {
 			loading.dismiss();
@@ -223,4 +230,3 @@ export class HomePage implements OnInit{
 	}
   	
 }
-
