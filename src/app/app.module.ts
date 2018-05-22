@@ -1,13 +1,15 @@
+import { PaymentPage } from './../pages/payment/payment';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ProfilePage } from '../pages/profile/profile';
-import { VehiclePage } from '../pages/vehicle/vehicle';
+import { VehiclePage, VehicleDetailsPage } from '../pages/vehicle/vehicle';
 import { NearbyWorkshopPage } from '../pages/nearby-workshop/nearby-workshop';
 import { DirectionsPage } from '../pages/directions/directions';
 import { LoginPage } from '../pages/login/login';
@@ -23,7 +25,6 @@ import { ProfileService } from '../services/profile';
 //native
 import { Geolocation } from '@ionic-native/geolocation'; 
 import { Firebase } from '@ionic-native/firebase';
-import { Diagnostic } from '@ionic-native/diagnostic';
 import { Device } from '@ionic-native/device';
 
 //firebase
@@ -41,12 +42,14 @@ import { credentials } from './config';
     TabsPage,
     ProfilePage,
     VehiclePage,
+    VehicleDetailsPage,
     NearbyWorkshopPage,
     DirectionsPage,
     LoginPage,
     RegisterPage,
     EditProfilePage,
-    FetchTowPage
+    FetchTowPage,
+    PaymentPage
   ],
   imports: [
     BrowserModule,
@@ -55,7 +58,8 @@ import { credentials } from './config';
     AngularFireModule.initializeApp(credentials.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    BrowserAnimationsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -64,12 +68,14 @@ import { credentials } from './config';
     TabsPage,
     ProfilePage,
     VehiclePage,
+    VehicleDetailsPage,
     NearbyWorkshopPage,
     DirectionsPage,
     LoginPage,
     RegisterPage,
     EditProfilePage,
-    FetchTowPage
+    FetchTowPage,
+    PaymentPage
   ],
   providers: [
     StatusBar,
@@ -80,7 +86,6 @@ import { credentials } from './config';
     //FcmProvider,
     ProfileService,
     Firebase,
-    Diagnostic,
     Device
   ]
 })

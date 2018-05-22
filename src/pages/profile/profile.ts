@@ -61,7 +61,7 @@ export class ProfilePage {
 	}
 
 	onEditProfile() {
-		let modal = this.modalCtrl.create(EditProfilePage);
+		let modal = this.modalCtrl.create(EditProfilePage, {cssClass:"myModal"});
 		modal.present();
 	}
  }

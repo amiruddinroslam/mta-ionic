@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFirestore } from 'angularfire2/firestore';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 
@@ -25,8 +26,9 @@ export class DirectionsPage {
   	workshopLng: any;
 	map: any;
 	markers = [];
-	totalDistance = 0;
-	totalDuration = 0;
+	totalDistance: string;
+	totalDuration: string;
+	totalDistanceInMeter = 0;
 	pos = {lat: null, lng: null};
 	ref = firebase.database().ref('geolocations/');
 	currentDate: Date;
@@ -36,7 +38,7 @@ export class DirectionsPage {
 	towReqRef: AngularFireList<any>;
 
 	constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, 
-		private afAuth: AngularFireAuth, private db: AngularFireDatabase, private loadingCtrl: LoadingController) {
+		private afAuth: AngularFireAuth, private db: AngularFireDatabase, private loadingCtrl: LoadingController, private afs: AngularFirestore) {
 			this.geoPosLat = this.navParams.get('geoPosLat');
 			this.geoPosLng = this.navParams.get('geoPosLng');
 			this.workshopLat = this.navParams.get('workshopLat');
@@ -85,10 +87,12 @@ export class DirectionsPage {
 				
 				for (var i=0; i<leg.length; ++i) {
 					
-					this.totalDistance += leg[i].distance.text;
-					this.totalDuration += leg[i].duration.text;
+					this.totalDistance = leg[i].distance.text;
+					this.totalDuration = leg[i].duration.text;
+					this.totalDistanceInMeter += leg[i].distance.value;
 				}
-				//console.log(this.totalDuration);
+				console.log(this.totalDuration);
+				console.log(this.totalDistance);
 				/*let markerStart = new google.maps.Marker({
 					map: this.map,
 					position: leg.start_position,
@@ -158,6 +162,15 @@ export class DirectionsPage {
 						loading.present();
 						
 						this.afAuth.authState.subscribe(auth => {
+
+							const docData = {
+						      pickup_flag: 0,
+						      userId: auth.uid
+						    }
+
+							const towRequest = this.afs.collection('towRequest');
+							towRequest.doc(auth.uid).set(docData);
+
 							console.log('geoPosLat: '+this.geoPosLat, 'geoposLng: '+this.geoPosLng, 'workshopLat: '+this.workshopLat, 'workshopLng: '+this.workshopLng);
 							this.db.list('/towRequest').push({
 								userId: auth.uid,
@@ -167,13 +180,14 @@ export class DirectionsPage {
 								destLng: this.workshopLng,
 								problem: data,
 								timeDate: timeDate,
+								distance: this.totalDistanceInMeter,
 								pickup_flag: 0,
 								status: 'requested'
 							})
 							.then(item => {
 								loading.dismiss();
 								this.key = item.key;
-								this.navCtrl.push(FetchTowPage, {'key': this.key, 'userId': auth.uid, 'originLat': this.geoPosLat, 'originLng': this.geoPosLng});
+								this.navCtrl.setRoot(FetchTowPage, {'key': this.key, 'userId': auth.uid, 'originLat': this.geoPosLat, 'originLng': this.geoPosLng});
 							})
 						});
 					}

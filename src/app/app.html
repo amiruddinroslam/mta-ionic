@@ -1,18 +1,18 @@
+<div *ngIf="showSplash" class="splash">
+	
+</div>
+
 <ion-menu [content]="nav" id="authenticated">
 	<ion-header>
 		<ion-toolbar class="user-profile">
 			<ion-grid>
 				<ion-row>
-					<ion-col col-4>
-						<div class="user-avatar">
-							<img src="">
-						</div>
-					</ion-col>
 					<ion-col padding-top col-8>
-						<h2 ion-text class="no-margin bold text-white">
-							João Firmino
-						</h2>
-						<span ion-text color="light">Customer</span>
+						<h5 ion-text class="no-margin bold text-white">
+							{{ (user | async)?.fullName }}
+						</h5>
+						<span ion-text color="light">{{ (user | async)?.vehicleRegNo }}</span>
+						<span ion-text color="light">{{ (user | async)?.vehicleMaker }} {{ (user | async)?.vehicleModel }}</span>
 					</ion-col>
 				</ion-row>
 
@@ -39,12 +39,8 @@
 				 Profile
 			</button>
 			<button ion-item menuClose class="text-1x" (click)="onLoad(vehiclePage)">
-				<ion-icon item-left color="primary" name="car"></ion-icon>
-				 Vehicle
-			</button>
-			<button ion-item menuClose class="text-1x" (click)="onLoad(loginPage)">
-				<ion-icon item-left color="primary" name="log-in"></ion-icon>
-				 Login
+				<ion-icon item-left color="primary" name="briefcase"></ion-icon>
+				 Towing Service Provider
 			</button>
 		</ion-list>
 	</ion-content>

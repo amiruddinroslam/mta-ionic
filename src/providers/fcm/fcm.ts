@@ -1,53 +1,53 @@
-// import { HttpClient } from '@angular/common/http';
-// import { Injectable } from '@angular/core';
-// import { Firebase } from '@ionic-native/firebase';
-// import { AngularFireDatabase } from 'angularfire2/database';
-// import { Platform } from 'ionic-angular';
-// import { AngularFireAuth } from 'angularfire2/auth';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Firebase } from '@ionic-native/firebase';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { Platform } from 'ionic-angular';
+import { AngularFireAuth } from 'angularfire2/auth';
 
-// @Injectable()
-// export class FcmProvider {
+@Injectable()
+export class FcmProvider {
 
-//   constructor(private firebaseNative: Firebase, private db: AngularFireDatabase, private platform: Platform, private afAuth: AngularFireAuth) {
+  constructor(private firebaseNative: Firebase, private afs: AngularFirestore, private platform: Platform, private afAuth: AngularFireAuth) {
 
-//   }
+  }
 
-//   //get permisson from user
-//   async getToken() {
-//     let token;
+  //get permisson from user
+  async getToken() {
+    let token;
 
-//     if(this.platform.is('android')) {
-//       token = await this.firebaseNative.getToken();
-//     }
+    if(this.platform.is('android')) {
+      token = await this.firebaseNative.getToken();
+    }
 
-//     return this.saveTokenToDatabase(token);
-//   }
+    return this.saveTokenToDatabase(token);
+  }
 
-//   private getUserId() {
-//     let uid;
-//     this.afAuth.authState.subscribe(auth =>{
-//         uid = auth.uid;
-//     });
+  private getUserId() {
+    let uid;
+    this.afAuth.authState.subscribe(auth =>{
+        uid = auth.uid;
+    });
 
-//     return uid;
-//   }
+    return uid;
+  }
 
-//   //save token to db
-//   private saveTokenToDatabase(token) {
-//     if(!token) return;
+  //save token to db
+  private saveTokenToDatabase(token) {
+    if(!token) return;
 
-//     const devicesRef = this.db.list('devices')
+    const devicesRef = this.afs.collection('devices')
 
-//     const docData = {
-//       token,
-//       userId: this.getUserId()
-//     }
+    const docData = {
+      token,
+      userId: this.getUserId()
+    }
 
-//     return devicesRef.push(token).set(docData);
-//   }
+    return devicesRef.doc(token).set(docData);
+  }
 
-//   //listen to incoming fcm msg
-//   listenToNotifications() {
-//     return this.firebaseNative.onNotificationOpen();
-//   }
-// }
+  //listen to incoming fcm msg
+  listenToNotifications() {
+    return this.firebaseNative.onNotificationOpen();
+  }
+}

@@ -1,11 +1,12 @@
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController } from 'ionic-angular';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import * as firebase from 'firebase/app';
 import { Device } from '@ionic-native/device';
+import { PaymentPage } from '../payment/payment';
 
 declare var google: any;
 
@@ -46,12 +47,12 @@ export class FetchTowPage implements OnInit{
 
     constructor(public navParams: NavParams, private db: AngularFireDatabase, private loadingCtrl: LoadingController, 
                 private geolocation: Geolocation, private device: Device, private afAuth: AngularFireAuth, private zone: NgZone,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController, private toastCtrl: ToastController, private navCtrl: NavController) {
       this.key = this.navParams.get('key');
       this.userId = this.navParams.get('userId');
       this.userLat = this.navParams.get('originLat');
       this.userLng = this.navParams.get('originLng');
-      console.log(this.userLat, this.userLng);
+      //console.log(this.userLat, this.userLng);
 
       this.towReqRef = this.db.object('towRequest/'+this.key);
       this.towReq = this.towReqRef.valueChanges();
@@ -115,6 +116,7 @@ export class FetchTowPage implements OnInit{
             text: 'Yes',
             handler: () => {
               this.towReqRef.update({"status": "arrive_at_workshop"});
+              this.completeRequest();
             }
           }
         ]
@@ -122,7 +124,7 @@ export class FetchTowPage implements OnInit{
 
       loading.present();
       this.towReq.subscribe(action => {
-        console.log(action.pickup_flag);
+        //console.log(action.pickup_flag);
         if(action.pickup_flag == 1) {
           loading.dismiss();
 
@@ -144,7 +146,6 @@ export class FetchTowPage implements OnInit{
           this.status = "Tow truck arrived at your location";
         } else if(action.status == "picked_up") {
           alertPickup.present();
-
           this.status = "Towing your vehicle to workshop";
         } else if(action.status == "arrived_at_workshop") {
           alertWorkshop.present();
@@ -156,7 +157,7 @@ export class FetchTowPage implements OnInit{
 
     getTowLocation() {
       this.towObj.subscribe(response => {
-        console.log(response);
+        //console.log(response);
         this.deleteMarkers();
         let image = 'assets/imgs/truck-icon.png';
         let updatelocation = new google.maps.LatLng(response.latitude, response.longitude);
@@ -191,7 +192,7 @@ export class FetchTowPage implements OnInit{
     }
 
     initMapError(error) {
-      console.log(error);
+      //console.log(error);
       this.initMap();
     }
 
@@ -202,7 +203,7 @@ export class FetchTowPage implements OnInit{
         icon: image
       });
       this.markers.push(marker);
-      console.log(this.markers);
+      //console.log(this.markers);
     }
   
     private setMapOnAll(map) {
@@ -212,7 +213,7 @@ export class FetchTowPage implements OnInit{
     }
   
     private clearMarkers() {
-      console.log('clear markers');
+      //console.log('clear markers');
       this.setMapOnAll(null);
     }
   
@@ -222,33 +223,22 @@ export class FetchTowPage implements OnInit{
     }
 
     completeRequest() {
-      const alertRating = this.alertCtrl.create({
-        title: 'Rating',
-        subTitle: 'Please give your rating on the towing service',
-        cssClass: 'alertstar',
-        enableBackdropDismiss:false,
-        buttons: [
-            { text: '1', handler: data => { console.log(data) }},
-            { text: '2', handler: data => { console.log(data) }},
-            { text: '3', handler: data => { console.log(data) }},
-            { text: '4', handler: data => { console.log(data) }},
-            { text: '5', handler: data => { console.log(data) }}
-        ]
-      });
-
       const alertComplete = this.alertCtrl.create({
         title: 'Confirmation',
         message: 'Confirm that the towing request is completed?',
         buttons: [
           {
             text: 'No',
-            role: 'cancel'
+            handler: () => {
+              this.towReqRef.update({"status": "arrived_at_workshop"});
+            }
           },
           {
             text: 'Yes',
             handler: () => {
-              alertRating.present();
+              //alertRating.present();
               this.towReqRef.update({"status": "completed"});
+              this.navCtrl.push(PaymentPage, {"key": this.key});
             }
           }
       ]

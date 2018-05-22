@@ -1,18 +1,16 @@
-<!--
-  Generated template for the VehiclePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>vehicle</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>Towing Service Provider</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <ion-list>
+    <button ion-item *ngFor="let company of towCompany | async" (click)="detail(company.key)">
+      <ion-icon name="briefcase" item-start></ion-icon>
+      {{ company.companyName }}</button>
+  </ion-list>
 </ion-content>
