@@ -97,6 +97,12 @@ export class LoginPage {
       message: 'Please fill in your profile.',
       buttons: ['Ok']
     });
+
+    const alertUser = this.alertCtrl.create({
+      title: 'Error',
+      message: 'This app is only for customer use. For towing service provider, please use Mobile Tow Assist (Professionals).',
+      buttons: ['Ok']
+    })
 		
 		this.authService.login(form.value.email, form.value.password)
 		.then(data => {
@@ -106,18 +112,15 @@ export class LoginPage {
           if(res == null) {
             alert.present();
             this.navCtrl.push(EditProfilePage);
-          };
+          } 
+          // if(res != null) {
+          //   if(res.role != 1) {
+          //     alertUser.present();
+          //     this.authService.logout();
+          //     this.navCtrl.setRoot(LoginPage);
+          //   }
+          // };
         })
-        
-				// this.user.subscribe(res => {
-				// 	if(res.role == 1) {
-				// 		loading.dismiss();
-				// 		this.navCtrl.setRoot(TabsPage);
-				// 	} else {
-				// 		loading.dismiss();
-				// 		toast.present();
-				// 	}
-				// });
 			});
 			
 			loading.dismiss();

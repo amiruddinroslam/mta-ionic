@@ -1,3 +1,4 @@
+import { TabsPage } from './../tabs/tabs';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import { AngularFireDatabase, AngularFireObject } from 'angularfire2/database';
@@ -28,7 +29,7 @@ export class PaymentPage {
   getTotalDuration() {
     this.towReq.subscribe(res => {
       this.totalDistance = (+res.distance/1000);
-      this.totalPrice = +this.totalDistance * 15;
+      this.totalPrice = +this.totalDistance * 17;
       this.totalPrice = +this.totalPrice.toFixed(2);
       console.log(this.totalPrice);
 
@@ -78,12 +79,17 @@ export class PaymentPage {
           handler: (rating) => {
             this.towReqRef.update({"rating": rating});
             toast.present();
+            this.navCtrl.setRoot(TabsPage);
           }
         }
       ]
     });
 
     alertRating.present();
+
+    setTimeout(() => {
+      this.navCtrl.setRoot(TabsPage);
+    }, 60000);
   }
 
 }

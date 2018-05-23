@@ -33,6 +33,8 @@ export class FetchTowPage implements OnInit{
   userLat: any;
   userLng: any;
   status: string;
+  towTruckNo: string;
+  companyName: string;
 
   map: any;
   markers = [];
@@ -56,12 +58,11 @@ export class FetchTowPage implements OnInit{
 
       this.towReqRef = this.db.object('towRequest/'+this.key);
       this.towReq = this.towReqRef.valueChanges();
-
     }
 
     ngOnInit() {
       const loading = this.loadingCtrl.create({
-        content: 'Please wait for tow operator to pick up your request.<br>TOW COMPANY'
+        content: 'Please wait for tow operator to pick up your request.'
       });
       
       const alertArrivedUser = this.alertCtrl.create({
@@ -137,6 +138,10 @@ export class FetchTowPage implements OnInit{
           this.towObjRef = this.db.object('geolocations/'+this.driverId);
           this.towObj = this.towObjRef.valueChanges();
           this.getTowLocation();
+
+          this.userObjRef = this.db.object('user/'+this.driverId);
+          this.userObj = this.userObjRef.valueChanges();
+          this.getCompanyDetails();
         };
 
         if(action.status == "tow_assigned") {
@@ -163,6 +168,13 @@ export class FetchTowPage implements OnInit{
         let updatelocation = new google.maps.LatLng(response.latitude, response.longitude);
         this.addMarker(updatelocation,image);
         this.setMapOnAll(this.map);
+      });
+    }
+
+    getCompanyDetails() {
+      return this.userObj.subscribe(response => {
+        this.towTruckNo = response.towTruckPlateNo;
+        this.companyName = response.companyName;
       });
     }
 
